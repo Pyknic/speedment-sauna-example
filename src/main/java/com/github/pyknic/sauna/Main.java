@@ -37,7 +37,7 @@ public final class Main {
                 .setBookedFrom(Date.valueOf(LocalDate.now().plus(3, DAYS)))
                 .setBookedTo(Date.valueOf(LocalDate.now().plus(5, DAYS)))
         );
-        
+
         bookings.persist(
             new BookingImpl()
                 .setBookingId(rand.nextLong())
@@ -47,7 +47,7 @@ public final class Main {
                 .setBookedFrom(Date.valueOf(LocalDate.now().plus(1, DAYS)))
                 .setBookedTo(Date.valueOf(LocalDate.now().plus(2, DAYS)))
         );
-            
+
         bookings.persist(
             new BookingImpl()
                 .setBookingId(rand.nextLong())
@@ -57,20 +57,21 @@ public final class Main {
                 .setBookedFrom(Date.valueOf(LocalDate.now().plus(2, DAYS)))
                 .setBookedTo(Date.valueOf(LocalDate.now().plus(7, DAYS)))
         );
-        
+
         final BookingView view = BookingView.create(bookings);
-        
+
         // Wait until the view is up-to-date.
         try { Thread.sleep(5_000); }
         catch (final InterruptedException ex) {
             throw new RuntimeException(ex);
         }
-        
+
         System.out.println("Current Bookings for Sauna 1:");
         final SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+        final Date now = Date.valueOf(LocalDate.now());
         view.stream()
             .filter(Booking.SAUNA.equal(1))
-            .filter(Booking.BOOKED_TO.greaterOrEqual(Date.valueOf(LocalDate.now())))
+            .filter(Booking.BOOKED_TO.greaterOrEqual(now))
             .sorted(Booking.BOOKED_FROM.comparator())
             .map(b -> String.format(
                 "Booked from %s to %s by Tenant %d.", 
@@ -79,7 +80,7 @@ public final class Main {
                 b.getTenant().getAsInt()
             ))
             .forEachOrdered(System.out::println);
-        
+
         System.out.println("No more bookings!");
         view.stop();
     }

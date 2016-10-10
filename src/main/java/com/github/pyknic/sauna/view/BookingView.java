@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 public final class BookingView {
     
     private final static int MAX_BATCH_SIZE = 25;
-    private final static int UPDATE_EVERY = 1_000; // Milliseconds
+    private final static int UPDATE_EVERY   = 1_000; // Milliseconds
 
     private final Timer timer;
     private final Map<Long, Booking> bookings;
@@ -130,13 +130,13 @@ public final class BookingView {
         );
     }
     
-    public static BookingView create(BookingManager manager) {
+    public static BookingView create(BookingManager mgr) {
         final AtomicBoolean working = new AtomicBoolean(false);
-        final AtomicLong last = new AtomicLong();
+        final AtomicLong last  = new AtomicLong();
         final AtomicLong total = new AtomicLong();
         
-        final String tableName = manager.getTableIdentifier().getTableName();
-        final String fieldName = Booking.ID.identifier().getColumnName();
+        final String table = mgr.getTableIdentifier().getTableName();
+        final String field = Booking.ID.identifier().getColumnName();
 
         final Timer timer = new Timer();
         final BookingView view = new BookingView(timer);
@@ -158,7 +158,7 @@ public final class BookingView {
                             // Get a list of up to 25 events that has not yet 
                             // been merged into the materialized object view.
                             final List<Booking> added = unmodifiableList(
-                                manager.stream()
+                                mgr.stream()
                                     .filter(Booking.ID.greaterThan(last.get()))
                                     .limit(MAX_BATCH_SIZE)
                                     .sorted(Booking.ID.comparator())
@@ -177,9 +177,8 @@ public final class BookingView {
 
                                 break;
                             } else {
-                                final Booking lastEntity = added.get(
-                                    added.size() - 1
-                                );
+                                final Booking lastEntity = 
+                                    added.get(added.size() - 1);
                                 
                                 last.set(lastEntity.getId());
                                 added.forEach(view::accept);
@@ -190,8 +189,8 @@ public final class BookingView {
                                     "Latest %s: %d.%n", 
                                     System.identityHashCode(last),
                                     added.size(),
-                                    tableName,
-                                    fieldName,
+                                    table,
+                                    field,
                                     Long.parseLong("" + last.get())
                                 );
                             }
