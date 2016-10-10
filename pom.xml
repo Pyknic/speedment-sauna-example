@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <speedment.version>2.3.5</speedment.version>
+        <speedment.version>3.0.0-EA2</speedment.version>
         <mysql.version>5.1.39</mysql.version>
     </properties>
 
@@ -47,8 +47,9 @@
 
         <dependency>
             <groupId>com.speedment</groupId>
-            <artifactId>speedment</artifactId>
+            <artifactId>runtime</artifactId>
             <version>${speedment.version}</version>
+            <type>pom</type>
         </dependency>
     </dependencies>
 </project>

@@ -1,131 +1,128 @@
 {
-  "config": {
-    "expanded": true,
-    "companyName": "pyknic",
-    "name": "sauna",
-    "packageLocation": "src/main/java/",
-    "packageName": "com.github.pyknic",
-    "dbmses": [
+  "config" : {
+    "expanded" : true,
+    "companyName" : "pyknic",
+    "name" : "sauna",
+    "packageLocation" : "src/main/java/",
+    "packageName" : "com.github.pyknic.sauna",
+    "dbmses" : [
       {
-        "expanded": true,
-        "port": 3306,
-        "schemas": [
+        "expanded" : true,
+        "port" : 3306,
+        "schemas" : [
           {
-            "tables": [
+            "tables" : [
               {
-                "expanded": true,
-                "primaryKeyColumns": [
+                "expanded" : true,
+                "primaryKeyColumns" : [
                   {
-                    "expanded": true,
-                    "name": "id",
-                    "ordinalPosition": 1
+                    "expanded" : true,
+                    "name" : "id",
+                    "ordinalPosition" : 1
                   }
                 ],
-                "indexes": [
+                "indexes" : [
                   {
-                    "expanded": false,
-                    "unique": true,
-                    "name": "PRIMARY",
-                    "indexColumns": [
+                    "expanded" : false,
+                    "unique" : true,
+                    "name" : "PRIMARY",
+                    "indexColumns" : [
                       {
-                        "orderType": "ASC",
-                        "expanded": true,
-                        "name": "id",
-                        "ordinalPosition": 1
+                        "orderType" : "ASC",
+                        "expanded" : true,
+                        "name" : "id",
+                        "ordinalPosition" : 1
                       }
                     ],
-                    "enabled": true
+                    "enabled" : true
                   }
                 ],
-                "columns": [
+                "columns" : [
                   {
-                    "databaseType": "java.lang.Long",
-                    "typeMapper": "com.speedment.config.db.mapper.identity.LongIdentityMapper",
-                    "expanded": true,
-                    "nullable": false,
-                    "autoIncrement": true,
-                    "name": "id",
-                    "ordinalPosition": 1,
-                    "enabled": true
+                    "databaseType" : "java.lang.Long",
+                    "typeMapper" : "com.speedment.runtime.typemapper.primitive.PrimitiveTypeMapper",
+                    "expanded" : true,
+                    "nullable" : false,
+                    "autoIncrement" : true,
+                    "name" : "id",
+                    "ordinalPosition" : 1,
+                    "enabled" : true
                   },
                   {
-                    "databaseType": "java.lang.Long",
-                    "typeMapper": "com.speedment.config.db.mapper.identity.LongIdentityMapper",
-                    "expanded": true,
-                    "nullable": false,
-                    "autoIncrement": false,
-                    "name": "booking_id",
-                    "ordinalPosition": 2,
-                    "enabled": true
+                    "databaseType" : "java.lang.Long",
+                    "typeMapper" : "com.speedment.runtime.typemapper.primitive.PrimitiveTypeMapper",
+                    "expanded" : true,
+                    "nullable" : false,
+                    "autoIncrement" : false,
+                    "name" : "booking_id",
+                    "ordinalPosition" : 2,
+                    "enabled" : true
                   },
                   {
-                    "databaseType": "java.lang.String",
-                    "typeMapper": "com.speedment.config.db.mapper.identity.StringIdentityMapper",
-                    "expanded": true,
-                    "nullable": false,
-                    "autoIncrement": false,
-                    "name": "event_type",
-                    "ordinalPosition": 3,
-                    "enabled": true
+                    "databaseType" : "java.lang.String",
+                    "expanded" : true,
+                    "nullable" : false,
+                    "enumConstants" : "CREATE,UPDATE,DELETE",
+                    "autoIncrement" : false,
+                    "name" : "event_type",
+                    "ordinalPosition" : 3,
+                    "enabled" : true
                   },
                   {
-                    "databaseType": "java.lang.Integer",
-                    "typeMapper": "com.speedment.config.db.mapper.identity.IntegerIdentityMapper",
-                    "expanded": true,
-                    "nullable": true,
-                    "autoIncrement": false,
-                    "name": "tenant",
-                    "ordinalPosition": 4,
-                    "enabled": true
+                    "databaseType" : "java.lang.Integer",
+                    "expanded" : true,
+                    "nullable" : true,
+                    "autoIncrement" : false,
+                    "name" : "tenant",
+                    "ordinalPosition" : 4,
+                    "enabled" : true
                   },
                   {
-                    "databaseType": "java.lang.Integer",
-                    "typeMapper": "com.speedment.config.db.mapper.identity.IntegerIdentityMapper",
-                    "expanded": true,
-                    "nullable": true,
-                    "autoIncrement": false,
-                    "name": "sauna",
-                    "ordinalPosition": 5,
-                    "enabled": true
+                    "databaseType" : "java.lang.Integer",
+                    "expanded" : true,
+                    "nullable" : true,
+                    "autoIncrement" : false,
+                    "name" : "sauna",
+                    "ordinalPosition" : 5,
+                    "enabled" : true
                   },
                   {
-                    "databaseType": "java.sql.Date",
-                    "typeMapper": "com.speedment.config.db.mapper.identity.DateIdentityMapper",
-                    "expanded": true,
-                    "nullable": true,
-                    "autoIncrement": false,
-                    "name": "booked_from",
-                    "ordinalPosition": 6,
-                    "enabled": true
+                    "databaseType" : "java.sql.Date",
+                    "expanded" : true,
+                    "nullable" : true,
+                    "autoIncrement" : false,
+                    "name" : "booked_from",
+                    "ordinalPosition" : 6,
+                    "enabled" : true
                   },
                   {
-                    "databaseType": "java.sql.Date",
-                    "typeMapper": "com.speedment.config.db.mapper.identity.DateIdentityMapper",
-                    "expanded": true,
-                    "nullable": true,
-                    "autoIncrement": false,
-                    "name": "booked_to",
-                    "ordinalPosition": 7,
-                    "enabled": true
+                    "databaseType" : "java.sql.Date",
+                    "expanded" : true,
+                    "nullable" : true,
+                    "autoIncrement" : false,
+                    "name" : "booked_to",
+                    "ordinalPosition" : 7,
+                    "enabled" : true
                   }
                 ],
-                "name": "booking",
-                "enabled": true
+                "name" : "booking",
+                "packageName" : "com.github.pyknic.sauna.booking",
+                "enabled" : true
               }
             ],
-            "expanded": true,
-            "name": "sauna",
-            "enabled": true
+            "expanded" : true,
+            "name" : "sauna",
+            "enabled" : true
           }
         ],
-        "typeName": "MySQL",
-        "ipAddress": "127.0.0.1",
-        "name": "db0",
-        "alias": "database",
-        "enabled": true,
-        "username": "root"
+        "name" : "db0",
+        "typeName" : "MySQL",
+        "ipAddress" : "127.0.0.1",
+        "alias" : "database",
+        "enabled" : true,
+        "username" : "root"
       }
     ],
-    "enabled": true
+    "enabled" : true
   }
 }
