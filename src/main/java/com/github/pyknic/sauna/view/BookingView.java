@@ -3,7 +3,7 @@ package com.github.pyknic.sauna.view;
 import com.github.pyknic.sauna.booking.Booking;
 import com.github.pyknic.sauna.booking.BookingImpl;
 import com.github.pyknic.sauna.booking.BookingManager;
-import com.speedment.runtime.core.util.OptionalUtil;
+import static com.speedment.runtime.core.util.OptionalUtil.unwrap;
 import static java.util.Collections.unmodifiableList;
 import java.util.List;
 import java.util.Map;
@@ -41,60 +41,68 @@ public final class BookingView {
         timer.cancel();
     }
     
-private boolean accept(Booking event) {
-    final String eventType = event.getEventType();
+    private boolean accept(Booking ev) {
+        final String type = ev.getEventType();
 
-    // If this was a creation event
-    switch (eventType) {
-        case "CREATE" :
-            // Creation events must contain all information.
-            if (!event.getSauna().isPresent()
-            ||  !event.getTenant().isPresent()
-            ||  !event.getBookedFrom().isPresent()
-            ||  !event.getBookedTo().isPresent()
-            ||  !checkIfAllowed(event)) {
-                return false;
-            }
-
-            // If there was already something mapped to that key, refuse the event.
-            return bookings.putIfAbsent(event.getBookingId(), event) == null;
-
-        case "UPDATE" :
-            // Create a copy of the current state
-            final Booking existing = bookings.get(event.getBookingId());
-            
-            // If the specified key did not exist, refuse the event.
-            if (existing != null) {
-                final Booking proposed = new BookingImpl();
-                proposed.setId(existing.getId());
-
-                // Update non-null values
-                proposed.setSauna(event.getSauna().orElse(OptionalUtil.unwrap(existing.getSauna())));
-                proposed.setTenant(event.getTenant().orElse(OptionalUtil.unwrap(existing.getTenant())));
-                proposed.setBookedFrom(event.getBookedFrom().orElse(OptionalUtil.unwrap(existing.getBookedFrom())));
-                proposed.setBookedTo(event.getBookedTo().orElse(OptionalUtil.unwrap(existing.getBookedTo())));
-
-                // Make sure these changes are allowed.
-                if (checkIfAllowed(proposed)) {
-                    bookings.put(event.getBookingId(), proposed);
-                    return true;
+        // If this was a creation event
+        switch (type) {
+            case "CREATE" :
+                // Creation events must contain all information.
+                if (!ev.getSauna().isPresent()
+                ||  !ev.getTenant().isPresent()
+                ||  !ev.getBookedFrom().isPresent()
+                ||  !ev.getBookedTo().isPresent()
+                ||  !checkIfAllowed(ev)) {
+                    return false;
                 }
-            }
 
-            return false;
+                // If something is already mapped to that key, refuse the event.
+                return bookings.putIfAbsent(ev.getBookingId(), ev) == null;
 
-        case "DELETE" :
-            // Remove the event if it exists, else refuse the event.
-            return bookings.remove(event.getBookingId()) != null;
+            case "UPDATE" :
+                // Create a copy of the current state
+                final Booking existing = bookings.get(ev.getBookingId());
 
-        default :
-            System.out.format("Unexpected event type '%s' was refused.%n", eventType);
-            return false;
+                // If the specified key did not exist, refuse the event.
+                if (existing != null) {
+                    final Booking proposed = new BookingImpl();
+                    proposed.setId(existing.getId());
+
+                    // Update non-null values
+                    proposed.setSauna(ev.getSauna().orElse(
+                        unwrap(existing.getSauna())
+                    ));
+                    proposed.setTenant(ev.getTenant().orElse(
+                        unwrap(existing.getTenant())
+                    ));
+                    proposed.setBookedFrom(ev.getBookedFrom().orElse(
+                        unwrap(existing.getBookedFrom())
+                    ));
+                    proposed.setBookedTo(ev.getBookedTo().orElse(
+                        unwrap(existing.getBookedTo())
+                    ));
+
+                    // Make sure these changes are allowed.
+                    if (checkIfAllowed(proposed)) {
+                        bookings.put(ev.getBookingId(), proposed);
+                        return true;
+                    }
+                }
+
+                return false;
+
+            case "DELETE" :
+                // Remove the event if it exists, else refuse the event.
+                return bookings.remove(ev.getBookingId()) != null;
+
+            default :
+                System.out.format("Unexpected type '%s' was refused.%n", type);
+                return false;
+        }
     }
-}
     
     private boolean checkIfAllowed(Booking booking) {
-        // Bookings where the end date is after the start date are always invalid.
+        // Bookings where the end date is after the start are always invalid.
         // (Same start and end date is okey).
         if (booking.getBookedFrom().get().after(booking.getBookedTo().get())) {
             return false;
@@ -143,11 +151,12 @@ private boolean accept(Booking event) {
                 if (working.compareAndSet(false, true)) {
                     try {
 
-                        // Loop until no events was merged (the database is up to date).
+                        // Loop until no events was merged 
+                        // (the database is up to date).
                         while (true) {
 
-                            // Get a list of up to 25 events that has not yet been merged
-                            // into the materialized object view.
+                            // Get a list of up to 25 events that has not yet 
+                            // been merged into the materialized object view.
                             final List<Booking> added = unmodifiableList(
                                 manager.stream()
                                     .filter(Booking.ID.greaterThan(last.get()))
@@ -159,7 +168,8 @@ private boolean accept(Booking event) {
                             if (added.isEmpty()) {
                                 if (!first) {
                                     System.out.format(
-                                        "%s: View is up to date. A total of %d rows have been loaded.%n",
+                                        "%s: View is up to date. A total of " + 
+                                        "%d rows have been loaded.%n",
                                         System.identityHashCode(last),
                                         total.get()
                                     );
@@ -167,14 +177,17 @@ private boolean accept(Booking event) {
 
                                 break;
                             } else {
-                                final Booking lastEntity = added.get(added.size() - 1);
+                                final Booking lastEntity = added.get(
+                                    added.size() - 1
+                                );
+                                
                                 last.set(lastEntity.getId());
-
                                 added.forEach(view::accept);
                                 total.addAndGet(added.size());
 
                                 System.out.format(
-                                    "%s: Downloaded %d row(s) from %s. Latest %s: %d.%n", 
+                                    "%s: Downloaded %d row(s) from %s. " + 
+                                    "Latest %s: %d.%n", 
                                     System.identityHashCode(last),
                                     added.size(),
                                     tableName,
